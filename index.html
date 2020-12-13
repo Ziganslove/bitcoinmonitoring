@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Monitoring</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <table class="tb-crypto">
+        <tr>
+            <th>Valute</th>
+            <th>Symbol</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>EUR</td>
+            <td>&euro;</td>
+            <td id="eur"></td>
+        </tr>
+        <tr>
+            <td>GBP</td>
+            <td>&pound;</td>
+            <td id="gbp"></td>
+        </tr>
+        <tr>
+            <td>USD</td>
+            <td>&#36;</td>
+            <td id="usd"></td>
+        </tr>
+        <tr>
+            <td>RUB</td>
+            <td>&#8381;</td>
+            <td id="rub"></td>
+        </tr>
+    </table>
+
+    <script>
+        let rub_usd;
+        $.get(
+            "https://www.cbr-xml-daily.ru/daily_json.js",
+            function (data) {
+                data = JSON.parse(data);
+                rub_usd = data.Valute.USD.Value;
+            }
+        )
+
+        $.get(
+            "https://api.coindesk.com/v1/bpi/currentprice.json",
+            function (data) {
+                data = JSON.parse(data);
+                $('#eur').html(data.bpi.EUR.rate);
+                $('#gbp').html(data.bpi.GBP.rate);
+                $('#usd').html(data.bpi.USD.rate);
+                x = data.bpi.USD.rate_float * rub_usd;
+                console.log(data.bpi.USD.rate_float);
+                console.log(rub_usd);
+                x = x.toLocaleString();
+                $('#rub').html(x);
+            }
+        );
+    </script>
+</body>
+
+</html>
